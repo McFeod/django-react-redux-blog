@@ -122,3 +122,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 TASTYPIE_DEFAULT_FORMATS = ['json']
+
+STATIC_ROOT = ''
+
+STATICFILES_DIRS = ('static', )
+
+BLOG_FOLD_LEVEL = 3

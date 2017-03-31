@@ -24,7 +24,11 @@ class ArticleResource(ModelResource):
 
 class CommentResource(ModelResource):
     author = ToOneField(UserResource, attribute='author', full=True)
-    parent_comment = ToOneField('self', attribute='parent_comment', full=False, null=True)
+
+    def dehydrate(self, bundle):
+        bundle.data['parent_comment'] = bundle.obj.parent_comment.id if bundle.obj.parent_comment else None
+        bundle.data['max_unfold_comment'] = bundle.obj.max_unfold_comment.id
+        return bundle
 
     class Meta:
         resource_name = 'comments'
@@ -34,4 +38,6 @@ class CommentResource(ModelResource):
         queryset = Comment.objects.all()
         filtering = {
             'parent_comment':  ALL_WITH_RELATIONS,
+            'level': ALL_WITH_RELATIONS,
+            'max_unfold_comment': ALL_WITH_RELATIONS
         }
