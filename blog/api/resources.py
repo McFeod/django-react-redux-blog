@@ -17,6 +17,10 @@ class UserResource(ModelResource):
 class ArticleResource(ModelResource):
     author = ToOneField(UserResource, attribute='author', full=True)
 
+    def dehydrate(self, bundle):
+        bundle.data['comment_count'] = bundle.obj.comment_set.count()
+        return bundle
+
     class Meta:
         resource_name = 'articles'
         queryset = Article.objects.all()

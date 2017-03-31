@@ -1,35 +1,43 @@
 from django.db import models
 
 from django.conf import settings
+from tastypie.utils import now
 
 
-class Article(models.Model):
+class BlogItem(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='автор')
-    text = models.TextField(verbose_name='текст статьи')
+    created_at = models.DateTimeField(default=now, verbose_name='время создания')
+    content = models.TextField(verbose_name='текст')
+
+    class Meta:
+        abstract = True
+
+
+class Article(BlogItem):
     header = models.TextField(verbose_name='название статьи')
 
     def __str__(self):
-        return '{}: {}'.format(self.author.get_full_name(), self.header[:50])
+        return '{}: {}'.format(
+            self.author.get_full_name() or self.author.username, self.header[:50])
 
     class Meta:
         verbose_name = 'статья'
         verbose_name_plural = 'статьи'
 
 
-class Comment(models.Model):
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='автор')
+class Comment(BlogItem):
     article = models.ForeignKey(Article, verbose_name='статья')
     parent_comment = models.ForeignKey(
         'self', verbose_name='начальный комментарий', null=True, blank=True,
         related_name='children')
-    text = models.TextField(verbose_name='текст комментария')
     max_unfold_comment = models.ForeignKey(
         'self', related_name='thread_comments', null=True, blank=True,
         verbose_name='последний полгружаемый по умолчанию комментарий в треде')
     level = models.IntegerField(verbose_name='уровень вложенности', null=True, blank=True)
 
     def __str__(self):
-        return '{}: {}'.format(self.author.get_full_name(), self.text[:50])
+        return '{}: {}'.format(
+            self.author.get_full_name() or self.author.username, self.content[:50])
 
     class Meta:
         verbose_name = 'комментарий'
