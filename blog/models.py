@@ -9,7 +9,7 @@ class Article(models.Model):
     header = models.TextField(verbose_name='название статьи')
 
     def __str__(self):
-        return '{}: {}'.format(self.author.full_name(), self.header[50:])
+        return '{}: {}'.format(self.author.get_full_name(), self.header[:50])
 
     class Meta:
         verbose_name = 'статья'
@@ -23,7 +23,7 @@ class Comment(models.Model):
     text = models.TextField(verbose_name='текст комментария')
 
     def __str__(self):
-        return '{}: {}'.format(self.author.full_name(), self.text[50:])
+        return '{}: {}'.format(self.author.get_full_name(), self.text[:50])
 
     class Meta:
         verbose_name = 'комментарий'
