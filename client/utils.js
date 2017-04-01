@@ -1,9 +1,5 @@
 export const ROOT_KEY = 'root';
 
-function getParent(comment) {
-    return comment.parent_comment ? comment.parent_comment : ROOT_KEY;
-}
-
 function getResourceUrl(params){
     let parts = window.location.href.split('/');
     params['article'] = parts.pop() || parts.pop();
@@ -13,21 +9,19 @@ function getResourceUrl(params){
         ).join('&');
 }
 
-function makeTree(root, comments) {
-    let tree = Object();
-    tree[root] = Object();
+function makeRelations(comments, root=ROOT_KEY) {
+    let pairs = {};
+    let children = {};
     for (let comment of comments){
-        tree[comment.id] = comment
-    }
-    for (let comment of comments){
-        let parent = getParent(comment);
-        if (tree[parent].children === undefined){
-            tree[parent].children = [comment]
+        pairs[comment.id] = comment;
+        let parent = comment.parent_comment || ROOT_KEY;
+        if (children[parent] === undefined){
+            children[parent] = [comment.id]
         } else {
-            tree[parent].children.push(comment)
+            children[parent].push(comment.id)
         }
     }
-    return tree
+    return {pairs, children}
 }
 
-export {getResourceUrl, makeTree, getParent}
+export {getResourceUrl, makeRelations}

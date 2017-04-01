@@ -3,6 +3,7 @@ import {getResourceUrl} from './utils'
 
 export const initialState = {
     comments: {},
+    children: {},
     loading: false
 };
 
@@ -14,7 +15,8 @@ export function commentReducer(state=initialState, action) {
             case GET_COMMENTS_SUCCESS:
                 return {
                     loading: false,
-                    comments: Object.assign({}, state.comments, action.payload)
+                    comments: Object.assign({}, state.comments, action.payload.pairs),
+                    children: Object.assign({}, state.children, action.payload.children),
                 }
         }
     }

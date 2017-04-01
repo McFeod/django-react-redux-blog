@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {getResourceUrl, makeTree, getParent} from './utils'
+import {getResourceUrl, makeRelations, ROOT_KEY} from './utils'
 
 export const GET_COMMENTS_REQUEST = 'GET_COMMENTS_REQUEST';
 export const GET_COMMENTS_SUCCESS = 'GET_COMMENTS_SUCCESS';
@@ -10,10 +10,12 @@ export function loadAction(params) {
         dispatch({
             type: GET_COMMENTS_REQUEST
         });
+
         axios.get(getResourceUrl(params)).then((response) => {
             dispatch({
                 type: GET_COMMENTS_SUCCESS,
-                payload: makeTree(getParent(params), response.data.objects),
+                payload: makeRelations(response.data.objects,
+                    params.max_unfold_comment || ROOT_KEY),
             })
         })
     }

@@ -16,6 +16,7 @@ class Comment extends Component {
     }
 
     render(){
+        console.log('render comment');
         return (
             <div className='comment-container'>
                 <p className='comment-header'>
@@ -26,12 +27,16 @@ class Comment extends Component {
                 </p>
                 <p className='comment-content'>{this.props.data.content || 'comment' } </p>
                 <button className='comment-button'>комментировать</button>
-                {(this.props.data.has_children && !this.props.data.hasOwnProperty('children')) ?
+                {(this.props.data.has_children && !this.props.children[this.props.data.id]) ?
                     <button onClick={::this.onLoadMore} className='comment-button'>раскрыть ветвь</button>
                     : ''
                 }
                 <div className='comment-nested'>
-                    <CommentList data={this.props.data['children']}/>
+                    <CommentList
+                        data={this.props.children[this.props.data.id]}
+                        children = {this.props.children}
+                        comments = {this.props.comments}
+                        loadAction={this.props.loadAction}/>
                 </div>
             </div>
         )
@@ -41,13 +46,16 @@ class Comment extends Component {
 
 class CommentList extends Component {
     render(){
+        console.log('render list');
         return <div>{
             (this.props.data) ?
             this.props.data.map(item => {
                 return <Comment
-                    data={item}
+                    data={this.props.comments[item]}
+                    children = {this.props.children}
+                    comments = {this.props.comments}
                     loadAction={this.props.loadAction}
-                    key={item.id}/>
+                    key={item}/>
             })
             : ''
         }</div>
@@ -68,9 +76,13 @@ class CommentTree extends Component{
     }
 
     render(){
+        console.log('render tree');
         return (
-            (this.props.comments['root']) ?
-            <CommentList data={this.props.comments[ROOT_KEY]['children']} loadAction={this.props.loadAction}/>
+            (this.props.children[ROOT_KEY]) ?
+            <CommentList data={this.props.children[ROOT_KEY]}
+                         children = {this.props.children}
+                         comments = {this.props.comments}
+                         loadAction={this.props.loadAction}/>
             : <p>Комментариев пока нет</p>
         )
     }
@@ -78,7 +90,8 @@ class CommentTree extends Component{
 
 function mapState(state) {
     return {
-        comments: state.comments
+        comments: state.comments,
+        children: state.children
     }
 }
 
