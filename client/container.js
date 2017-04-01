@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import FontAwesome from 'react-fontawesome'
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import {loadAction} from './actions'
@@ -27,16 +28,21 @@ class Comment extends Component {
                 </p>
                 <p className='comment-content'>{this.props.data.content || 'comment' } </p>
                 <button className='comment-button'>комментировать</button>
-                {(this.props.data.has_children && !this.props.children[this.props.data.id]) ?
+                {(this.props.data.has_children && !this.props.state.children[this.props.data.id]) ?
                     <button onClick={::this.onLoadMore} className='comment-button'>раскрыть ветвь</button>
                     : ''
                 }
                 <div className='comment-nested'>
-                    <CommentList
-                        data={this.props.children[this.props.data.id]}
-                        children = {this.props.children}
-                        comments = {this.props.comments}
-                        loadAction={this.props.loadAction}/>
+                    {(this.props.state.loading === this.props.data.id) ?
+                        <FontAwesome
+                            name='spinner'
+                            spin/>
+                        : <CommentList
+                            data={this.props.state.children[this.props.data.id]}
+                            state = {this.props.state}
+                            loadAction={this.props.loadAction}/>
+                    }
+
                 </div>
             </div>
         )
@@ -51,9 +57,8 @@ class CommentList extends Component {
             (this.props.data) ?
             this.props.data.map(item => {
                 return <Comment
-                    data={this.props.comments[item]}
-                    children = {this.props.children}
-                    comments = {this.props.comments}
+                    data={this.props.state.comments[item]}
+                    state = {this.props.state}
                     loadAction={this.props.loadAction}
                     key={item}/>
             })
@@ -78,20 +83,22 @@ class CommentTree extends Component{
     render(){
         console.log('render tree');
         return (
-            (this.props.children[ROOT_KEY]) ?
-            <CommentList data={this.props.children[ROOT_KEY]}
-                         children = {this.props.children}
-                         comments = {this.props.comments}
-                         loadAction={this.props.loadAction}/>
-            : <p>Комментариев пока нет</p>
+            (this.props.state.loading === ROOT_KEY) ?
+                <FontAwesome
+                    name='spinner'
+                    spin/>
+                    : (this.props.state.children[ROOT_KEY]) ?
+                        <CommentList data={this.props.state.children[ROOT_KEY]}
+                                     state = {this.props.state}
+                                     loadAction={this.props.loadAction}/>
+                        : <p>Комментариев пока нет</p>
         )
     }
 }
 
 function mapState(state) {
     return {
-        comments: state.comments,
-        children: state.children
+        state: state
     }
 }
 

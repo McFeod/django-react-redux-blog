@@ -4,14 +4,14 @@ import {getResourceUrl} from './utils'
 export const initialState = {
     comments: {},
     children: {},
-    loading: false
+    loading: undefined
 };
 
 export function commentReducer(state=initialState, action) {
     if (action){
         switch (action.type){
             case GET_COMMENTS_REQUEST:
-                return {... state, loading:true};
+                return {... state, loading:action.payload};
             case GET_COMMENTS_SUCCESS:
                 return {
                     loading: false,

@@ -8,7 +8,8 @@ export const GET_COMMENTS_FAILURE = 'GET_COMMENTS_FAILURE';
 export function loadAction(params) {
     return (dispatch) => {
         dispatch({
-            type: GET_COMMENTS_REQUEST
+            type: GET_COMMENTS_REQUEST,
+            payload: params.max_unfold_comment || ROOT_KEY
         });
 
         axios.get(getResourceUrl(params)).then((response) => {
