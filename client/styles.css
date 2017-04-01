@@ -1,0 +1,27 @@
+.comment-header span {
+    font-size: smaller;
+}
+
+.comment-header {
+    color: #308555;
+}
+
+.comment-content,
+.comment-button,
+.comment-header span,
+.comment-nested {
+    margin-left: 32px;
+}
+
+.comment-container {
+    border-top: dotted #308555 1px;
+    margin-top: 16px;
+    width: 100%;
+}
+
+.comment-button {
+    padding: 0;
+    border: none;
+    background: none;
+    color: #2e6da4;
+}

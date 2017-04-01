@@ -32,6 +32,7 @@ class CommentResource(CustomModelResource):
     def dehydrate(self, bundle):
         bundle.data['parent_comment'] = bundle.obj.parent_comment.id if bundle.obj.parent_comment else None
         bundle.data['max_unfold_comment'] = bundle.obj.max_unfold_comment.id
+        bundle.data['has_children'] = bundle.obj.children.exists()
         return bundle
 
     class Meta:

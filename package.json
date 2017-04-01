@@ -4,9 +4,8 @@
   "description": "blog demo",
   "main": "webpack.config.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "./node_modules/.bin/webpack --progress --watch --display-error-details",
-    "bs": "./node_modules/.bin/webpack --config webpack-bootstrap.config.js --progress --display-error-details"
+    "build": "./node_modules/.bin/webpack --progress --optimize-minimize"
   },
   "author": "Georgy Fedoseyev",
   "license": "MIT",

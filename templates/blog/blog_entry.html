@@ -1,4 +1,18 @@
 {% extends 'blog/base.html' %}
+{% load staticfiles %}
 {% block content %}
-<p>todo</p>
+    <h2>{{ article.header }}</h2>
+    <h4>{{ article.author }}, {{ article.created_at }}</h4>
+    <div class="container">
+        {{ article.content }}
+    </div>
+    <h3>Комментарии</h3>
+    {% if request.user.is_authenticated %}
+        <div id="comments"></div>
+    {% else %}
+        <p>Авторизуйтесь, чтобы комментировать</p>
+    {% endif %}
+{% endblock %}
+{% block extra_scripts %}
+    <script src="{% static 'comments.js' %}"></script>
 {% endblock %}
