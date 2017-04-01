@@ -1,4 +1,23 @@
 {% extends 'blog/base.html' %}
 {% block content %}
-<p>todo</p>
+    <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th>Статья</th>
+            <th>Автор</th>
+            <th>Дата публикации</th>
+            <th>Число комментариев</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for article in articles %}
+            <tr>
+                <th><a href="{% url 'blog:article' article.id %}">{{ article.header }}</a></th>
+                <th>{{ article.author.obj }}</th>
+                <th>{{ article.created_at }}</th>
+                <th>{{ article.comment_count }}</th>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

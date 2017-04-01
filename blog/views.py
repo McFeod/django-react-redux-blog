@@ -2,6 +2,8 @@ from django.contrib.auth.forms import AuthenticationForm
 
 from django.views.generic import TemplateView
 
+from blog.api import ArticleResource
+
 
 class BlogView(TemplateView):
     template_name = 'blog/base.html'
@@ -16,6 +18,13 @@ class BlogView(TemplateView):
 
 class BlogIndex(BlogView):
     template_name = 'blog/index.html'
+
+    def get_context_data(self, **kwargs):
+        result = {
+            'articles': ArticleResource().get_list_context(self.request)
+        }
+        result.update(super().get_context_data(**kwargs))
+        return result
 
 
 class BlogEntry(BlogView):

@@ -2,19 +2,19 @@ from django.contrib.auth.models import User
 from tastypie.authentication import SessionAuthentication
 from tastypie.constants import ALL_WITH_RELATIONS
 from tastypie.fields import ToOneField
-from tastypie.resources import ModelResource
 
+from blog.api.custom_model_resource import CustomModelResource
 from blog.models import Article, Comment
 
 
-class UserResource(ModelResource):
+class UserResource(CustomModelResource):
     class Meta:
         resource_name = 'users'
         queryset = User.objects.all()
         fields = ['username', 'first_name', 'last_name', 'id']
 
 
-class ArticleResource(ModelResource):
+class ArticleResource(CustomModelResource):
     author = ToOneField(UserResource, attribute='author', full=True)
 
     def dehydrate(self, bundle):
@@ -26,7 +26,7 @@ class ArticleResource(ModelResource):
         queryset = Article.objects.all()
 
 
-class CommentResource(ModelResource):
+class CommentResource(CustomModelResource):
     author = ToOneField(UserResource, attribute='author', full=True)
 
     def dehydrate(self, bundle):
