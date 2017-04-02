@@ -24,6 +24,7 @@ class Article(BlogItem):
             self.author.get_full_name() or self.author.username, self.header[:50])
 
     class Meta:
+        ordering = ['-created_at']
         verbose_name = 'статья'
         verbose_name_plural = 'статьи'
 

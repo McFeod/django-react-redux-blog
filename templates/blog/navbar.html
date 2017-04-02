@@ -22,13 +22,15 @@
                     <li><a href="{% url 'admin:index' %}">Администрирование</a></li>
                 {% endif %}
                 {% if request.user.is_authenticated %}
-                    <li><a href="{% url 'logout' %}?next={{ request.path | urlencode }}">
+                    <li><a href="{% url 'auth:auth_logout' %}?next={{ request.path | urlencode }}">
                         Выход
                     </a></li>
                 {% else %}
-                    <li><a href="#" data-toggle="modal" data-target="#loginModal">
-                        Вход
-                    </a></li>
+                    {% if login_form %}
+                        <li><a href="#" data-toggle="modal" data-target="#loginModal">
+                            Вход
+                        </a></li>
+                    {% endif %}
                 {% endif %}
             </ul>
         </div>

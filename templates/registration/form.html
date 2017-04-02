@@ -1,0 +1,12 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+<form action="{% block address %}{% endblock %}{% block params %}{% endblock %}"
+      method="post" class="col-sm-6 col-sm-offset-3">
+    {% csrf_token %}
+    {% block form_container %}{% endblock %}
+    <div class="form-group col-sm-offset-5 col-sm-2">
+        <button type="submit" class="btn btn-primary">Отправить</button>
+    </div>
+</form>
+{% endblock %}

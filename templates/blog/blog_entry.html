@@ -10,7 +10,7 @@
     {% if request.user.is_authenticated %}
         <div id="comments"></div>
     {% else %}
-        <p>Авторизуйтесь, чтобы комментировать</p>
+        <p>Комментарии доступны только авторизованным пользователям</p>
     {% endif %}
 {% endblock %}
 {% block extra_scripts %}

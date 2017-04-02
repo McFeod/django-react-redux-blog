@@ -1,0 +1,5 @@
+{% extends 'registration/form.html' %}
+{% load bootstrap %}
+{% block address %}{% url 'auth:registration_register' %}{% endblock %}
+{% block params %}?next={{ request.GET.next | urlencode }}{% endblock %}
+{% block form_container %}{{ form | bootstrap }}{% endblock %}

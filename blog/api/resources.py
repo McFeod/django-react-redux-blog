@@ -1,11 +1,21 @@
+import locale
+
 from django.contrib.auth.models import User
+from django.utils.timezone import localtime
 from tastypie.authentication import SessionAuthentication
 from tastypie.authorization import ReadOnlyAuthorization
 from tastypie.constants import ALL_WITH_RELATIONS
 from tastypie.fields import ToOneField
+from tastypie.serializers import Serializer
 
 from blog.api.custom_model_resource import CustomModelResource
 from blog.models import Article, Comment
+
+
+class HumanReadableTimeSerializer(Serializer):
+    def format_datetime(self, data):
+        locale.setlocale(locale.LC_ALL, 'ru_RU.UTF-8')
+        return localtime(data).strftime('%c')
 
 
 class UserResource(CustomModelResource):
@@ -54,6 +64,7 @@ class CommentResource(CustomModelResource):
     class Meta:
         resource_name = 'comments'
         always_return_data = True
+        serializer = HumanReadableTimeSerializer()
         list_allowed_methods = ['get', 'post']
         detail_allowed_methods = ['get']
         authorization = CommentAuthorization()

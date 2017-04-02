@@ -1,5 +1,6 @@
 {% load bootstrap %}
 
+{% if login_form %}
 <div id="loginModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -8,15 +9,18 @@
                 <h4 class="modal-title">Авторизация</h4>
             </div>
             <div class="modal-body">
-                <form action="{% url 'login' %}?next={{ request.path | urlencode }}"
+                <form action="{% url 'auth:auth_login' %}?next={{ request.path | urlencode }}"
                       method="post">
                     {% csrf_token %}
                     {{ login_form|bootstrap }}
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Вход</button>
+                        <button type="submit" class="btn btn-primary col-sm-2">Вход</button>
+                        <a class="btn btn-default col-sm-offset-1" href="{% url 'auth:registration_register' %}?next={{ request.path | urlencode }}">
+                            Регистрация</a>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+{% endif %}
