@@ -45,7 +45,6 @@ export function sendCommentAction(commentId, newComment) {
             parent_comment: commentId,
             article: +getArticleId(),
         };
-        console.log(params);
         axios.post('/api/v1/comments/', params).then((response) => {
             dispatch({
                 type: SAVE_COMMENT_SUCCESS,

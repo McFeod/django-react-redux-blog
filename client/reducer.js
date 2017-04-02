@@ -25,11 +25,17 @@ export function commentReducer(state=initialState, action) {
             case SAVE_COMMENT_REQUEST:
                 return {... state, answering: undefined, waitingAccept: state.answering};
             case SAVE_COMMENT_SUCCESS:
+                let children_update = {};
+                children_update[action.payload.parent_comment] =
+                    (action.payload.parent_comment) ?
+                        [action.payload.id] :
+                        state.children[action.payload.parent_comment].concat(action.payload.id);
+                let comments_update = {};
+                comments_update[action.payload.id] = action.payload;
                 return {... state,
                     waitingAccept: undefined,
-                    // todo
-                    comments: Object.assign({}, state.comments, action.payload.pairs),
-                    children: Object.assign({}, state.children, action.payload.children)
+                    comments: Object.assign({}, state.comments, comments_update),
+                    children: Object.assign({}, state.children, children_update)
                 }
         }
     }
