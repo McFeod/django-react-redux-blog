@@ -8,6 +8,9 @@ from blog.models import Article
 
 
 class BlogView(TemplateView):
+    """
+    Basic class for views in this app
+    """
     template_name = 'blog/base.html'
 
     def get_context_data(self, **kwargs):

@@ -2,9 +2,9 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import {Provider} from 'react-redux'
 
-import configureStore from './store'
-import {initialState, commentReducer} from  './reducer'
-import CommentTree from './container'
+import configureStore from './redux/store'
+import {initialState, commentReducer} from  './redux/reducer'
+import CommentTree from './react_components/comment-tree.jsx'
 
 const store = configureStore(initialState, commentReducer);
 

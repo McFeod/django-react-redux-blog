@@ -5,6 +5,9 @@ from tastypie.utils import now
 
 
 class BlogItem(models.Model):
+    """
+    Base class for articles and comments
+    """
     author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='автор')
     created_at = models.DateTimeField(default=now, verbose_name='время создания')
     content = models.TextField(verbose_name='текст')
@@ -30,6 +33,8 @@ class Comment(BlogItem):
     parent_comment = models.ForeignKey(
         'self', verbose_name='начальный комментарий', null=True, blank=True,
         related_name='children')
+
+    # fields for quick search
     max_unfold_comment = models.ForeignKey(
         'self', related_name='thread_comments', null=True, blank=True,
         verbose_name='последний полгружаемый по умолчанию комментарий в треде')
@@ -44,11 +49,18 @@ class Comment(BlogItem):
         verbose_name_plural = 'комментарии'
 
     def save_level(self):
+        """
+        Calculates and saves nesting level of comment
+        """
         if self.level is None:
             self.level = self.parent_comment.level + 1 if self.parent_comment else 1
             self.save()
 
     def save_unfold_comment(self):
+        """
+        Calculates and saves id of latest comment in current comment thread, 
+        which is unfold by default
+        """
         if self.max_unfold_comment is None:
             self.max_unfold_comment = self.parent_comment.max_unfold_comment \
                 if self.level > settings.BLOG_FOLD_LEVEL else self

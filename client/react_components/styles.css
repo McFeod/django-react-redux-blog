@@ -15,6 +15,10 @@
     margin-left: 32px;
 }
 
+.root-button {
+    margin-left: -32px;
+}
+
 .comment-container {
     border-top: dotted #308555 1px;
     margin-top: 16px;
