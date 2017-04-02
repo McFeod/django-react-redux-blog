@@ -34,6 +34,8 @@ class CommentAuthorization(ReadOnlyAuthorization):
 
 class CommentResource(CustomModelResource):
 
+    article = ToOneField(ArticleResource, attribute='article', full=False)
+    max_unfold_comment = ToOneField('blog.api.resources.CommentResource', attribute='max_unfold_comment', full=False)
     author = ToOneField(UserResource, attribute='author', full=True)
 
     def hydrate(self, bundle):
@@ -59,6 +61,7 @@ class CommentResource(CustomModelResource):
         authentication = SessionAuthentication()
         queryset = Comment.objects.all()
         filtering = {
+            'article': ALL_WITH_RELATIONS,
             'parent_comment':  ALL_WITH_RELATIONS,
             'level': ALL_WITH_RELATIONS,
             'max_unfold_comment': ALL_WITH_RELATIONS

@@ -8,6 +8,7 @@ function getArticleId() {
 
 function getResourceUrl(params){
     params['article'] = getArticleId();
+    params['limit'] = 0;
     return '/api/v1/comments/?' +
         Object.entries(params).map(
             ([key, value]) => key + '=' + value

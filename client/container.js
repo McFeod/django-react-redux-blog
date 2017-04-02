@@ -9,7 +9,7 @@ import './styles.css'
 
 class CommentForm extends Component {
     onSend(){
-        this.props.actions.sendCommentAction(this.props.data, this.input) //todo
+        this.props.actions.sendCommentAction(this.props.data, this.input)
     }
 
 
