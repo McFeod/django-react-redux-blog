@@ -32,18 +32,18 @@ export function showCommentForm(commentId) {
         })
 }
 
-export function sendCommentAction(commentId, newComment) {
+export function sendCommentAction(comment, newComment) {
     return (dispatch) => {
         dispatch({
             type: SAVE_COMMENT_REQUEST,
-            payload: commentId
+            payload: comment.id
         });
 
         axios.defaults.headers.common['X-CSRFToken'] = getCookie('csrftoken');
         const params = {
             content: newComment.value,
-            parent_comment: commentId,
-            article: +getArticleId(),
+            parent_comment: comment.id,
+            article: comment.article,
         };
         axios.post('/api/v1/comments/', params).then((response) => {
             dispatch({

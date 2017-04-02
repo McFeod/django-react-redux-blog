@@ -9,7 +9,7 @@ import './styles.css'
 
 class CommentForm extends Component {
     onSend(){
-        this.props.actions.sendCommentAction(this.props.data, this.input)
+        this.props.actions.sendCommentAction(this.props.data, this.input) //todo
     }
 
 
@@ -24,6 +24,21 @@ class CommentForm extends Component {
     }
 }
 
+class CommentButton extends Component{
+    onStartWriting(){
+        this.props.actions.showCommentForm(this.props.data.id)
+    }
+
+    render() {
+        return (this.props.state.answering === this.props.data.id) ?
+            <CommentForm data={this.props.data}
+                         actions={this.props.actions}/>
+            : (this.props.state.waitingAccept === this.props.data.id) ?
+                <div className='spinner-wrapper'><FontAwesome name='gear' spin/></div>
+                : <button className='comment-button' onClick={::this.onStartWriting}>
+                    комментировать</button>
+    }
+}
 
 class Comment extends Component {
     onLoadMore(){
@@ -33,10 +48,6 @@ class Comment extends Component {
                 max_unfold_comment: this.props.data.max_unfold_comment
             })
         }
-    }
-
-    onStartWriting(){
-        this.props.actions.showCommentForm(this.props.data.id)
     }
 
     render(){
@@ -50,19 +61,16 @@ class Comment extends Component {
                 </p>
                 <p className='comment-content'>{this.props.data.content || 'comment' } </p>
 
-                {(this.props.state.answering === this.props.data.id) ?
-                    <CommentForm data={this.props.data.id}
-                                 actions={this.props.actions}/>
-                    : (this.props.state.waitingAccept === this.props.data.id) ?
-                        <div className='spinner-wrapper'><FontAwesome name='gear' spin/></div>
-                        : <button className='comment-button' onClick={::this.onStartWriting}>
-                            комментировать</button>
-                }
                 {(this.props.data.has_children && !this.props.state.children[this.props.data.id]) ?
-                    <button onClick={::this.onLoadMore} className='comment-button expand-comment-button'>
+                    <button onClick={::this.onLoadMore} className='comment-button'>
                         раскрыть ветвь</button>
-                    : ''
+                    : <CommentButton
+                        data={this.props.data}
+                        state = {this.props.state}
+                        actions={this.props.actions}
+                    />
                 }
+
                 <div className='comment-nested'>
                     {(this.props.state.loading === this.props.data.id) ?
                         <FontAwesome name='spinner' spin/>

@@ -40,7 +40,6 @@ class CommentResource(CustomModelResource):
 
     def hydrate(self, bundle):
         bundle.obj.author = bundle.request.user
-        bundle.obj.article = Article.objects.get(id=int(bundle.data['article']))
         bundle.obj.parent_comment = None if bundle.data['parent_comment'] is None else (
             Comment.objects.get(id=int(bundle.data['parent_comment']))
         )
