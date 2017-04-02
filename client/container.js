@@ -2,22 +2,44 @@ import React, {Component} from 'react'
 import FontAwesome from 'react-fontawesome'
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
-import {loadAction} from './actions'
+import {loadAction, sendCommentAction, showCommentForm} from './actions'
 import {ROOT_KEY} from './utils'
 import './styles.css'
+
+
+class CommentForm extends Component {
+    onSend(){
+        this.props.actions.sendCommentAction(this.props.data, this.input) //todo
+    }
+
+
+    render(){
+        return (
+            <div className='comment-form'>
+                <textarea className='form-control' ref={(input) => this.input = input}></textarea>
+                <button onClick={::this.onSend} className='comment-button'>
+                    ответить</button>
+            </div>
+        )
+    }
+}
+
 
 class Comment extends Component {
     onLoadMore(){
         if (this.props.data.has_children){
-            this.props.loadAction({
+            this.props.actions.loadAction({
                 level__gt: this.props.data.level,
                 max_unfold_comment: this.props.data.max_unfold_comment
             })
         }
     }
 
+    onStartWriting(){
+        this.props.actions.showCommentForm(this.props.data.id)
+    }
+
     render(){
-        console.log('render comment');
         return (
             <div className='comment-container'>
                 <p className='comment-header'>
@@ -27,20 +49,27 @@ class Comment extends Component {
                     </span>
                 </p>
                 <p className='comment-content'>{this.props.data.content || 'comment' } </p>
-                <button className='comment-button'>комментировать</button>
+
+                {(this.props.state.answering === this.props.data.id) ?
+                    <CommentForm data={this.props.data.id}
+                                 actions={this.props.actions}/>
+                    : (this.props.state.waitingAccept === this.props.data.id) ?
+                        <div className='spinner-wrapper'><FontAwesome name='gear' spin/></div>
+                        : <button className='comment-button' onClick={::this.onStartWriting}>
+                            комментировать</button>
+                }
                 {(this.props.data.has_children && !this.props.state.children[this.props.data.id]) ?
-                    <button onClick={::this.onLoadMore} className='comment-button'>раскрыть ветвь</button>
+                    <button onClick={::this.onLoadMore} className='comment-button expand-comment-button'>
+                        раскрыть ветвь</button>
                     : ''
                 }
                 <div className='comment-nested'>
                     {(this.props.state.loading === this.props.data.id) ?
-                        <FontAwesome
-                            name='spinner'
-                            spin/>
+                        <FontAwesome name='spinner' spin/>
                         : <CommentList
                             data={this.props.state.children[this.props.data.id]}
                             state = {this.props.state}
-                            loadAction={this.props.loadAction}/>
+                            actions={this.props.actions}/>
                     }
 
                 </div>
@@ -52,14 +81,13 @@ class Comment extends Component {
 
 class CommentList extends Component {
     render(){
-        console.log('render list');
         return <div>{
             (this.props.data) ?
             this.props.data.map(item => {
                 return <Comment
                     data={this.props.state.comments[item]}
                     state = {this.props.state}
-                    loadAction={this.props.loadAction}
+                    actions={this.props.actions}
                     key={item}/>
             })
             : ''
@@ -71,7 +99,7 @@ class CommentList extends Component {
 
 class CommentTree extends Component{
     onLoadMore(){
-        this.props.loadAction({
+        this.props.actions.loadAction({
             level__lte: 3
         })
     }
@@ -81,17 +109,17 @@ class CommentTree extends Component{
     }
 
     render(){
-        console.log('render tree');
         return (
-            (this.props.state.loading === ROOT_KEY) ?
-                <FontAwesome
-                    name='spinner'
-                    spin/>
+            <div className='comment-tree'>{
+                (this.props.state.loading === ROOT_KEY) ?
+                    <FontAwesome name='spinner' spin/>
                     : (this.props.state.children[ROOT_KEY]) ?
                         <CommentList data={this.props.state.children[ROOT_KEY]}
-                                     state = {this.props.state}
-                                     loadAction={this.props.loadAction}/>
+                                     state={this.props.state}
+                                     actions={this.props.actions}/>
                         : <p>Комментариев пока нет</p>
+            }
+            </div>
         )
     }
 }
@@ -104,7 +132,11 @@ function mapState(state) {
 
 function mapDispatch(dispatch) {
     return {
-        loadAction: bindActionCreators(loadAction, dispatch)
+        actions: bindActionCreators({
+            loadAction,
+            sendCommentAction,
+            showCommentForm
+        }, dispatch)
     }
 }
 

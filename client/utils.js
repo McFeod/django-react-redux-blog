@@ -1,8 +1,13 @@
 export const ROOT_KEY = 'root';
 
-function getResourceUrl(params){
+function getArticleId() {
     let parts = window.location.href.split('/');
-    params['article'] = parts.pop() || parts.pop();
+    return parts.pop() || parts.pop();
+}
+
+
+function getResourceUrl(params){
+    params['article'] = getArticleId();
     return '/api/v1/comments/?' +
         Object.entries(params).map(
             ([key, value]) => key + '=' + value
@@ -24,4 +29,11 @@ function makeRelations(comments, root=ROOT_KEY) {
     return {pairs, children}
 }
 
-export {getResourceUrl, makeRelations}
+function getCookie(name) {
+  let matches = document.cookie.match(new RegExp(
+    "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+  ));
+  return matches ? decodeURIComponent(matches[1]) : undefined;
+}
+
+export {getResourceUrl, makeRelations, getArticleId, getCookie}

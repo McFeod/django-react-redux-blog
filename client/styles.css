@@ -6,6 +6,8 @@
     color: #308555;
 }
 
+.spinner-wrapper,
+.comment-form,
 .comment-content,
 .comment-button,
 .comment-header span,
@@ -17,6 +19,7 @@
     border-top: dotted #308555 1px;
     margin-top: 16px;
     width: 100%;
+    position: relative;
 }
 
 .comment-button {
@@ -24,4 +27,14 @@
     border: none;
     background: none;
     color: #2e6da4;
+}
+
+.expand-comment-button {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.comment-tree {
+    margin-bottom: 32px;
 }
