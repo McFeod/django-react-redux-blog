@@ -29,7 +29,7 @@ class CommentTree extends Component{
                 <div className='root-button'>
                     <CommentButton
                         data={{
-                            article: '/api/v1/articles/' + getArticleId() + '/',
+                            article: +getArticleId(),
                             id: ROOT_KEY
                         }}
                         state={this.props.state}
