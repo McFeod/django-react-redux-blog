@@ -15,7 +15,7 @@
                 <th><a href="{% url 'blog:article' article.id %}">{{ article.header }}</a></th>
                 <th>{{ article.author.obj }}</th>
                 <th>{{ article.created_at }}</th>
-                <th>{{ article.comment_count }}</th>
+                <th>{{ article.comment_set.count }}</th>
             </tr>
         {% endfor %}
         </tbody>

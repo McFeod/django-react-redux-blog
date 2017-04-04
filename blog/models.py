@@ -1,7 +1,7 @@
 from django.db import models
 
 from django.conf import settings
-from tastypie.utils import now
+from django.utils import timezone
 
 
 class BlogItem(models.Model):
@@ -9,7 +9,7 @@ class BlogItem(models.Model):
     Base class for articles and comments
     """
     author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='автор')
-    created_at = models.DateTimeField(default=now, verbose_name='время создания')
+    created_at = models.DateTimeField(default=timezone.now, verbose_name='время создания')
     content = models.TextField(verbose_name='текст')
 
     class Meta:
