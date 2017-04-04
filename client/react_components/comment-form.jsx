@@ -3,7 +3,9 @@ import './styles.css'
 
 class CommentForm extends Component {
     onSend(){
-        this.props.actions.sendCommentAction(this.input, this.props.data)
+        if (this.input.value) {
+            this.props.actions.sendCommentAction(this.input, this.props.data)
+        }
     }
 
     render(){
