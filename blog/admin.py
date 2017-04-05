@@ -8,4 +8,4 @@ admin.site.register(Article)
 
 @admin.register(Comment)
 class CommentAdmin(ModelAdmin):
-    exclude = ['level', 'max_unfold_comment']
+    exclude = ['level', 'max_unfold_comment', 'has_children']

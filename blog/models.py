@@ -38,8 +38,9 @@ class Comment(BlogItem):
     # fields for quick search
     max_unfold_comment = models.ForeignKey(
         'self', related_name='thread_comments', null=True, blank=True,
-        verbose_name='последний полгружаемый по умолчанию комментарий в треде')
+        verbose_name='последний подгружаемый по умолчанию комментарий в треде')
     level = models.IntegerField(verbose_name='уровень вложенности', null=True, blank=True)
+    has_children = models.BooleanField(verbose_name='есть ли ответы на комментарий', default=False)
 
     def __str__(self):
         return '{}: {}'.format(
@@ -67,9 +68,16 @@ class Comment(BlogItem):
                 if self.level > settings.BLOG_FOLD_LEVEL else self
             self.save()
 
+    def update_parent(self):
+        if self.parent_comment and not self.parent_comment.has_children:
+            self.parent_comment.has_children = True
+            self.parent_comment.save()
+
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         self.save_level()
         super().save(force_insert, force_update, using, update_fields)
         self.save_unfold_comment()
+        self.update_parent()
+
 
